@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo"
+    ports: 
+      - "27017:27017"
+    networks:
+      - mern-app
+    volumes:
+      - ./mongo-backup:/data/db
+  api-server:
+    image: api-server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    networks:
+      - mern-app
+
+  react-app:
+    image: react-app
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - api-server
+    networks:
+      - mern-app
+
+networks:
+  mern-app:
+    driver: bridge
